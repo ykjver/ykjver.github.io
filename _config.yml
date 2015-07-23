@@ -1,8 +1,8 @@
 # Site settings
-title: 慢节奏
+title: 刀客在楼兰
 email: ykjver@163.com
 description: > # this means to ignore newlines until "baseurl:"
-  爱生活，爱观察生活
+  把刀放下，写段代码先
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://bolg.ykjver.com" # the base hostname & protocol for your site
 twitter_username: lvsekedou
