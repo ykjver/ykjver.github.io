@@ -6,7 +6,7 @@ categories: algorithm
 author : 自来也
 ---
 
-题目为(http://pta.patest.cn/pta/test/18/exam/4/question/615)
+题目为[树的同构](http://pta.patest.cn/pta/test/18/exam/4/question/615)
 递归思路，先处理基本情况，然后在处理左左相等就看右右相不相等，如果左左不相等就看左右互换的情况
 
     #define MaxTree 10
