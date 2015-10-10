@@ -11,3 +11,9 @@ author : 自来也
 ###maven
 - [Maven 那点事儿](http://my.oschina.net/huangyong/blog/194583)
 
+
+##js
+
+###在线视频播放
+- [videoJs](https://github.com/videojs/video.js)
+
