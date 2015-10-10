@@ -9,11 +9,11 @@ author : 自来也
 ##java
 
 ###maven
-- [Maven 那点事儿](http://my.oschina.net/huangyong/blog/194583)
+- [Maven 那点事儿](http://my.oschina.net/huangyong/blog/194583) maven入门
 
 
 ##js
 
 ###在线视频播放
-- [videoJs](https://github.com/videojs/video.js)
+- [videoJs](https://github.com/videojs/video.js) 开源免费在线播放插件
 
