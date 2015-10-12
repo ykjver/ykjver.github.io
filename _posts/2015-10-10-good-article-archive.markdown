@@ -14,6 +14,13 @@ author : 自来也
 
 ##js
 
-###在线视频播放
+###Plugins
+
+####video Plugins
+
 - [videoJs](https://github.com/videojs/video.js) 开源免费在线播放插件
+
+####datePicker 日期选择插件
+
+- [bootstrapDatetimepicker](http://www.bootcss.com/p/bootstrap-datetimepicker/index.htm)
 
