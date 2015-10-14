@@ -10,6 +10,8 @@ author : 自来也
 
 ###maven
 - [Maven 那点事儿](http://my.oschina.net/huangyong/blog/194583) maven入门
+- [userAgent Parser](https://github.com/ua-parser) Http userAgent Parser集合
+- [Java userAgent Parser](https://github.com/HaraldWalker/user-agent-utils/tree/master) Java 版本 userAgent Parser
 
 
 ##js
@@ -23,4 +25,5 @@ author : 自来也
 ####datePicker 日期选择插件
 
 - [bootstrapDatetimepicker](http://www.bootcss.com/p/bootstrap-datetimepicker/index.htm)
+
 
