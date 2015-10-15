@@ -15,6 +15,10 @@ author : 自来也
 - [userAgent Parser](https://github.com/ua-parser) Http userAgent Parser集合
 - [Java userAgent Parser](https://github.com/HaraldWalker/user-agent-utils/tree/master) Java 版本 userAgent Parser
 
+###DateUtil
+- [日期工具类](http://dylanxu.iteye.com/blog/1450069) 
+- [Java 工具集合](https://github.com/looly/common-tools)
+
 
 ##js
 

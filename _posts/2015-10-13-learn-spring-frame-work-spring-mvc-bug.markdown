@@ -2,7 +2,7 @@
 layout: post
 title:  "spring mvc TIPS"
 date:   2015-10-13 23:10:45
-categories: article
+categories: java
 author : 自来也
 ---
 
