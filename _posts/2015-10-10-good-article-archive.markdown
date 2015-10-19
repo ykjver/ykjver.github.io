@@ -28,8 +28,16 @@ author : 自来也
 
 - [videoJs](https://github.com/videojs/video.js) 开源免费在线播放插件
 
+### form select
+- [bootstrap select](http://silviomoreto.github.io/bootstrap-select/)
+
 ####datePicker 日期选择插件
 
 - [bootstrapDatetimepicker](http://www.bootcss.com/p/bootstrap-datetimepicker/index.htm)
 
+##前端
+
+###web移动端适配
+- [移动端高清、多屏适配方案](http://www.html-js.com/article/Mobile-terminal-H5-mobile-terminal-HD-multi-screen-adaptation-scheme%203041)
+- 
 
