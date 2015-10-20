@@ -31,13 +31,21 @@ author : 自来也
 ### form select
 - [bootstrap select](http://silviomoreto.github.io/bootstrap-select/)
 
-####datePicker 日期选择插件
+#### 时间处理 Handle date and time
 
-- [bootstrapDatetimepicker](http://www.bootcss.com/p/bootstrap-datetimepicker/index.htm)
+- [bootstrapDatetimepicker](https://eonasdan.github.io/bootstrap-datetimepicker/)
+- [datepicker](https://github.com/eternicode/bootstrap-datepicker)
+- [momentJs](http://momentjs.com/) parser, validate, manipulate, and display dates in JavaScript
 
 ##前端
 
 ###web移动端适配
 - [移动端高清、多屏适配方案](http://www.html-js.com/article/Mobile-terminal-H5-mobile-terminal-HD-multi-screen-adaptation-scheme%203041)
 - 
+
+
+##设计
+
+###配色
+- [nipponcolors](http://nipponcolors.com/#asagi)
 
