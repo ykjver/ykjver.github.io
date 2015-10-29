@@ -37,11 +37,13 @@ author : 自来也
 - [datepicker](https://github.com/eternicode/bootstrap-datepicker)
 - [momentJs](http://momentjs.com/) parser, validate, manipulate, and display dates in JavaScript
 
+###Echarts
+- [Echarts Java端处理](https://github.com/abel533/ECharts) Echarts Java 类库
+
 ##前端
 
 ###web移动端适配
 - [移动端高清、多屏适配方案](http://www.html-js.com/article/Mobile-terminal-H5-mobile-terminal-HD-multi-screen-adaptation-scheme%203041)
-- 
 
 
 ##设计
