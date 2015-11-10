@@ -55,7 +55,9 @@ author : 自来也
 
 ###网站
 - [wikihow](http://zh.wikihow.com/%E9%A6%96%E9%A1%B5)
+- [wiki.jikexueyuan](http://wiki.jikexueyuan.com/)
 
 ###技术博客
 - [美团技术博客](http://tech.meituan.com/)
+- [并发编程网](http://ifeve.com/)
 

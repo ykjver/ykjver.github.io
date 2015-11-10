@@ -2,7 +2,7 @@
 layout: post
 title:  "Learn Data Structures And Algorithm -- Avl Tree"
 date:   2015-10-24 23:10:45
-categories: java
+categories: Data Structures And Algorithm
 author : 自来也
 ---
 
