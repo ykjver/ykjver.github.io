@@ -4,4 +4,4 @@ title: About
 permalink: /about/
 ---
 
-Java程序员一枚，精通面向工资编程SOP(Salary Oriented Programming).
+一枚正在学习如何坚持把一件事情做得尽善尽美的程序员.
