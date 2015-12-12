@@ -72,3 +72,9 @@ public class Student {
 大多数框架都允许通过xml,property,text,注解等多种方式来对框架进行配置，在这里可以这样理解，注解其实就是和xml文件的作用是一样的，提过框架中反射需要用到的信息，只不过xml文件是把这些类信息独立到单独的文件中去了，而注解则是把需要的类描述信息独立到了类中的费业务逻辑代码区域。
 
 待续~~
+
+
+
+###REFERENCE
+
+- (深入理解Java：注解（Annotation）--注解处理器)[http://www.cnblogs.com/peida/archive/2013/04/26/3038503.html]
