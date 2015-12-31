@@ -61,4 +61,9 @@ author : 自来也
 ###技术博客
 - [美团技术博客](http://tech.meituan.com/)
 - [并发编程网](http://ifeve.com/)
+- [程序员编程艺术](http://taop.marchtea.com/index.html)
 
+
+##网络
+
+- [ip地址分类](http://blog.csdn.net/ylqmf/article/details/4970213)
