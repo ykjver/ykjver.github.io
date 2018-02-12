@@ -3,7 +3,7 @@ layout: post
 title:  "Java 快速入门"
 date:   2018-02-13 00:12:00
 categories:  java
-author : GraphicImage
+author : ykjver
 ---
 
 
