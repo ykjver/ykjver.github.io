@@ -9,7 +9,7 @@ author : ykjver
 
 ### 进制
 
-`0b` 开头代表二进制，`0` 开头代表八进制，`0x` 开头代表十六进制
+`0b` 开头代表二进制，`0` 开头代表八进制，`0x` 开头代表十六进制
 
 ```java
 System.out.println(0b100); // 4
@@ -23,16 +23,16 @@ System.out.println(0x100); // 256
 1. 基本类型：4类8种
 2. 引用类型：类，接口，数组。
 
-类型 | 占用
----- | ----
-byte | 1字节
-short | 2字节
-int | 4 字节
-long | 8 字节
-float | 4 字节
-double | 8 字节
-char | 2 字节
-boolean | 1 字节
+| 类型     | 占用   |
+| -------- | ------ |
+| byte     | 1字节  |
+| short    | 2字节  |
+| int      | 4 字节 |
+| long     | 8 字节 |
+| float    | 4 字节 |
+| double   | 8 字节 |
+| char     | 2 字节 |
+| boolean | 1 字节 |
 
 整数默认是int类型，浮点数默认是double类型，long类型的变量，要加l或者L,float类型的变量，要加f或者F。程序中的整数字面值 `1` 为 int 类型，浮点字面值 `1.1` 为 double 类型，如果其他类型和字面类型做四则运算，则会提升值 int 或者 double
 
