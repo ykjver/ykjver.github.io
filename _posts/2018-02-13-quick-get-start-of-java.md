@@ -122,7 +122,7 @@ public class MethodOverloadDemo {
 
 ### 内部类
 
-成员内部类
+#### 成员内部类
 ```java
 public class InnerClassDemo {
 
@@ -143,7 +143,7 @@ public class InnerClassDemo {
 }
 ```
 
-局部类
+#### 局部类
 ```java
 public class LocalClassDemo {
     public static void main(String[] args) {
@@ -168,7 +168,7 @@ public class LocalClassDemo {
 }
 ```
 
-匿名类
+#### 匿名类
 ```java
 public class AnonymousClass {
 
@@ -184,3 +184,43 @@ public class AnonymousClass {
     }
 }
 ```
+
+### 字符串
+
+#### 字符串的常用构造方法
+
+```java
+//"你好"的 UTF-8 字节数组
+byte[] bytes = new byte[]{-28, -67, -96, -27, -91, -67};
+String str1 = new String(bytes);
+String str2 = new String(bytes, "UTF-8");
+
+//"你好"的 字符数组
+char[] chars = new char[]{'你', '好'};
+String str3 = new String(chars);
+String str4 = new String(chars, 0, 2);
+
+StringBuilder sb = new StringBuilder("你好");
+String str5 = new String(sb);
+```
+
+### String,StringBuilder,StringBuffer
+
+`String` 为不可变的字符串，`StringBuffer` 为线程安全的可变字符串，`StringBuilder` 为线程非安全的可变字符串
+
+```java
+
+// JDK 中的 Sring 对象
+public final class String
+    implements java.io.Serializable, Comparable<String>, CharSequence {
+    /** The value is used for character storage. */
+    private final char value[];
+```
+
+这里存储的是用 char 数组存储字符串的，不过是 final 类型，所以不可变，所以对字符串做增加不是对 char 数组做改变。
+
+StringBuffer 和 StringBuilder 都集成自 AbstractStringBuilder，由于 StringBuffer 的方法加了 sychronized 关键字，所以使得 StringBuffer 操作底层的 char 数组变得线程安全。
+
+### 正则表达式
+
+
