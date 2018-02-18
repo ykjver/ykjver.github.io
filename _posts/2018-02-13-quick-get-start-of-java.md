@@ -223,4 +223,72 @@ StringBuffer 和 StringBuilder 都集成自 AbstractStringBuilder，由于 Strin
 
 ### 正则表达式
 
+> 根据 Java Language Specification 的要求，Java 源代码的字符串中的反斜线被解释为 Unicode 转义或其他字符转义。因此必须在字符串字面值中使用两个反斜线，表示正则表达式受到保护，不被 Java 字节码编译器解释。例如，当解释为正则表达式时，字符串字面值 "\b" 与单个退格字符匹配，而 "\\b" 与单词边界匹配。字符串字面值 "\(hello\)" 是非法的，将导致编译时错误；要与字符串 (hello) 匹配，必须使用字符串字面值 "\\(hello\\)"
 
+
+#### 匹配索引
+
+- `public int start()`：返回匹配到的首字符的索引
+- `public int end()`：返回匹配到的尾字符索引加一
+
+```java
+    public static void test2() {
+        String str = "dog dog dog happy dog year";
+        String reg = "\\bdog\\b";
+
+        Pattern p = Pattern.compile(reg);
+        Matcher m = p.matcher(str);
+
+        int count = 0;
+        while (m.find()) {
+            count++;
+            System.out.println(count + " " + m.start() + " " + m.end());
+        }
+    }
+```
+
+#### 判断是否匹配
+
+- `public boolean lookingAt()`：从头开始匹配模式
+- `public boolean find()`：尝试匹配下一个
+- `public boolean matches`：将整个区域和模式进行匹配
+
+```java
+String str = "cat cat cat";
+String reg = "cat";
+
+//匹配整个字符串
+boolean isMatches = Pattern.matches(reg, str);
+
+Matcher m = Pattern.compile(reg).matcher(str);
+//在字符串序列中查找是否有匹配模式的部分
+boolean isFound = m.find();
+boolean isLookingAt = m.lookingAt();
+```
+
+#### 字符串替换
+
+- `public String replaceAll`：替换所有匹配到的字符串
+
+
+```java
+String str = "lion lion lion, I'm a lion";
+String reg = "lion";
+
+Matcher m = Pattern.compile(reg).matcher(str);
+//cat cat cat, I'm a cat
+String replaceStr = m.replaceAll("cat");
+```
+
+
+`String` 类也有这个方法
+
+```java
+String replaceStr1 = "lion lion lion, I'm a lion".replaceAll(reg, "dog");
+
+//String#replaceAll(String replacement) 方法的实现也是通过 Pattern 和 Matcher 类实现的
+public String replaceAll(String regex, String replacement) {
+    return Pattern.compile(regex).matcher(this).replaceAll(replacement);
+}
+```
+## Spring
