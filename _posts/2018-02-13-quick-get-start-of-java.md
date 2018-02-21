@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Java 快速入门"
+title:  "重新学习 Java"
 date:   2018-02-13 00:12:00
 categories:  java
 author : ykjver
