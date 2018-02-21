@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "jdk详解"
+title:  "JDK一些常识"
 date:   2016-01-11 23:59:59
 categories:  java
 author : 自来也

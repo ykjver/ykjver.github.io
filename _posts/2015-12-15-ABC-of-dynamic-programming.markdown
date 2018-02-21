@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Learn Data Structures And Algorithm -- 动态规划"
+title:  "动态规划的一些知识"
 date:   2015-12-20 01:44:45
 categories:  Data Structures And Algorithm
 author : 自来也

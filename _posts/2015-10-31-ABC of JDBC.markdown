@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "ABC Of JDBC -- Avl Tree"
+title:  "JDBC的一些知识"
 date:   2015-10-31 23:10:45
 categories: java
 author : 自来也

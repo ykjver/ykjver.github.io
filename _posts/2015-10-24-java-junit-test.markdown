@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Learn Data Structures And Algorithm -- Avl Tree"
+title:  "平衡树"
 date:   2015-10-24 23:10:45
 categories: Data Structures And Algorithm
 author : 自来也
