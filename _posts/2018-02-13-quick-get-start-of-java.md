@@ -292,3 +292,162 @@ public String replaceAll(String regex, String replacement) {
 }
 ```
 ## Spring
+
+Ant 风格的资源匹配符号
+- ?：匹配文件名中的一个字符
+- *：匹配文件名中任意字符
+- **：匹配多次路径
+
+
+`BeanFactory` 和 `ApplicationContext`，为 Web 专门准备的是 `WebApplicationContext`
+
+先设置一个学生类，将学生类注入到 spring 的 IoC 容器中
+```java
+public class Student {
+    private String name;
+    private Integer age;
+
+    //setter 和 getter 方法省略
+}
+```
+
+spring 配置文件，定义 spring 容器中的类
+```xml
+<bean name="student" class="com.ykjver.learnspring.controller.Student"></bean>
+```
+
+IoC 容器的基本使用
+
+```java
+//加载配置文件的 resource
+ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+Resource resource = resolver.getResource("classpath:springConf.xml");
+
+//初始化 BeanFactory 工厂
+DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
+XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
+reader.loadBeanDefinitions(resource);
+
+//从工厂中获取类
+Student student = factory.getBean("student", Student.class);
+```
+
+`ApplicationContext` 的基本使用
+```java
+ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("springConf.xml");
+Student student = ctx.getBean("student", Student.class);
+
+System.out.println(student.getName() + " " + student.getAge());
+```
+
+基于 Annotation 的 ApplicationContext
+
+使用 Java 类配置
+```java
+@Configuration
+public class MyBeans {
+
+    @Bean(name = "student2")
+    public Student buildStudent() {
+        Student student = new Student();
+        student.setName("NashYoung");
+        student.setAge(12);
+        return student;
+    }
+}
+```
+
+```java
+ApplicationContext ctx = new AnnotationConfigApplicationContext(MyBeans.class);
+Student student = ctx.getBean("student2", Student.class);
+```
+
+获取 `WebApplicationContext` 的方法
+
+```java
+@RequestMapping("hello")
+@ResponseBody
+public String hello(HttpServletRequest request) {
+
+    //WebApplicationContext 实际上是放在 ServletContext 里面的。
+    ServletContext context = request.getServletContext();
+    WebApplicationContext wac = (WebApplicationContext) context.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+    Dog dog = wac.getBean("bigDog", Dog.class);
+    dog.say();
+
+    return "you";
+}
+```
+
+Bean 配置信息
+- xml
+- Groovry
+- Java Class Java 类
+- Annotation 注解
+
+
+依赖注入的方式
+- 属性注入
+- 构造函数注入
+    - 参数类型
+    - 索引位置
+    - 索引位置和参数类型
+    - 类型反射
+- 工厂方法注入，静态工厂和非静态工厂
+
+方法注入
+
+- lookup 方法注入
+- 方法替换
+
+
+## AOP
+
+JDK 动态代理，CGLib 动态代理
+
+JDK 动态代理通过实现 `java.lang.reflect.InvocationHandler` 生成代理类
+
+```java
+public class MyJDKInvocationHandler implements InvocationHandler {
+    private Object target;
+
+    public MyJDKInvocationHandler(Object target) {
+        //方法调用者
+        this.target = target;
+    }
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        System.out.print("参数是:" + Arrays.toString(args));
+        System.out.println("调用前" + proxy.getClass().getName() + "." + method.getName());
+        //获取调用的结果，并返回
+        Object result = method.invoke(target, args);
+        System.out.println("调用后");
+        return result;
+    }
+}
+```
+
+使用代理调用 say 方法
+
+```java
+@Test
+public void test4() {
+
+    MyInterface target = new MyInterfaceImpl();
+
+    MyJDKInvocationHandler handler = new MyJDKInvocationHandler(target);
+
+    //JDK 代理必须使用 interface 进行调用
+    MyInterface proxy = (MyInterface) Proxy.newProxyInstance(
+            target.getClass().getClassLoader(),
+            target.getClass().getInterfaces(),
+            handler
+    );
+
+    proxy.say();
+}
+```
+
+2018-02-20
+Updating...
