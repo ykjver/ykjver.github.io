@@ -507,8 +507,8 @@ public class BeforeAdviceTest {
         proxyFactory.addAdvice(advice);
 
         Waiter proxy = (Waiter) proxyFactory.getProxy();
-        proxy.greetTo("杨科");
-        proxy.serveTo("杨科");
+        proxy.greetTo("ykjver");
+        proxy.serveTo("ykjver");
 
     }
 }
