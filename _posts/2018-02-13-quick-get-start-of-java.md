@@ -463,6 +463,56 @@ MyInterfaceImpl proxy = (MyInterfaceImpl) enhancer.create();
 proxy.say();
 ```
 
+Spring AOP 前置增强
 
-2018-02-20
+添加需要增强的类和接口
+```java
+//服务员接口
+public interface Waiter {
+    void greetTo(String name);
+    void serveTo(String name);
+}
+
+// 实际需要增强的类
+public class NativeWaiter implements Waiter {
+    @Override
+    public void greetTo(String name) {
+        System.out.println("greet to..." + name);
+    }
+
+    @Override
+    public void serveTo(String name) {
+        System.out.println("serve to..." + name);
+    }
+}
+
+//增强类，前置增强，在增强目标的每隔方法执行前都执行一句“你好”
+public class GreetingBeforeAdvice implements MethodBeforeAdvice {
+    @Override
+    public void before(Method method, Object[] objects, Object o) throws Throwable {
+        String clientName = (String) objects[0];
+        System.out.println("你好，" + clientName);
+    }
+}
+
+//增强和目标接口，并执行代理类
+public class BeforeAdviceTest {
+    @Test
+    public void before() {
+        Waiter waiter = new NativeWaiter();
+        BeforeAdvice advice = new GreetingBeforeAdvice();
+        ProxyFactory proxyFactory = new ProxyFactory();
+
+        proxyFactory.setTarget(waiter);
+        proxyFactory.addAdvice(advice);
+
+        Waiter proxy = (Waiter) proxyFactory.getProxy();
+        proxy.greetTo("杨科");
+        proxy.serveTo("杨科");
+
+    }
+}
+```
+
+2018-02-22
 Updating...
