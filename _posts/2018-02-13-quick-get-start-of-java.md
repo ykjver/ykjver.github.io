@@ -449,5 +449,20 @@ public void test4() {
 }
 ```
 
+使用 CGlib 做代理，是通过动态修改字节码技术，需要代理类实现 `MethodInterceptor` 接口，通过返回一个 `Enhancer` 产生了的代理类
+
+```java
+// MyCglibProxy 实现了接口 MethodInterceptor
+MyCglibProxy methodInterceptor = new MyCglibProxy();
+Enhancer enhancer = new Enhancer();
+//设置代理类的父类
+enhancer.setSuperclass(MyInterfaceImpl.class);
+//设置调用
+enhancer.setCallback(methodInterceptor);
+MyInterfaceImpl proxy = (MyInterfaceImpl) enhancer.create();
+proxy.say();
+```
+
+
 2018-02-20
 Updating...
