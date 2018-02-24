@@ -514,5 +514,134 @@ public class BeforeAdviceTest {
 }
 ```
 
-2018-02-22
+Spring AOP 实际上是使用了 `CglibAopProxy` 和 `JdkDynamicAopProxy` 两种形式
+
+
+Spring 使用 AspectJ 的语法
+
+```java
+//定义接口
+public interface UserDao {
+
+    int addUser();
+
+    void updateUser();
+
+    void deleteUser();
+
+    void findUser();
+
+}
+
+//实现接口
+@Repository
+public class UserDaoImpl implements UserDao {
+    @Override
+    public int addUser() {
+        System.out.println("addUser...");
+//        int i = 1 / 0;
+        return 111;
+    }
+
+    @Override
+    public void updateUser() {
+        System.out.println("updateUser...");
+    }
+
+    @Override
+    public void deleteUser() {
+        System.out.println("deleteUser...");
+    }
+
+    @Override
+    public void findUser() {
+        System.out.println("findUser...");
+    }
+}
+
+//定义切面，和切面方法
+@Aspect
+public class MyAspect {
+
+    /**
+     * 前置通知
+     */
+    @Before("execution(* com.ykjver.learnspring.springaopdemo.lesson3.UserDao.addUser(..))")
+    public void before() {
+        System.out.println("前置增强...");
+    }
+
+    /**
+     * 在返回后增强
+     * @param returnVal
+     */
+    @AfterReturning(value = "execution(* com.ykjver.learnspring.springaopdemo.lesson3.UserDao.addUser(..))", returning = "returnVal")
+    public void afterReturning(Object returnVal) {
+        System.out.println("返回后增强..." + returnVal);
+    }
+
+    @Around("execution(* com.ykjver.learnspring.springaopdemo.lesson3.UserDao.addUser(..))")
+    public Object around(ProceedingJoinPoint pj) throws Throwable {
+        System.out.println("环绕增强前...");
+        Object obj = pj.proceed();
+        System.out.println("环绕增强后...");
+        return obj;
+    }
+
+    @AfterThrowing(value = "execution(* com.ykjver.learnspring.springaopdemo.lesson3.UserDao.addUser(..))", throwing = "e")
+    public void afterThrowing(Throwable e) {
+        System.out.println("出现异常: msg = " + e.getMessage());
+    }
+
+
+    @After("execution(* com.ykjver.learnspring.springaopdemo.lesson3.UserDao.addUser(..))")
+    public void after() {
+        System.out.println("后置增强...");
+    }
+}
+```
+
+
+如果是使用 XML 配置配型，则首相要定义一个用于装增强方法的切面类，也就是说这个类中的方法就是前置增强，后置增强方法等，然后定义一个切点，就是哪些地方需要切入，比如 com.ykjver.UserDao 这个类需要切入，或者 com.ykjver.** 包下所有类需要切入。然后再配置是 before 类型的切入，还是 around 类型的切入。
+
+先定义切面类
+```java
+public class MyAspectXML {
+
+    public void before() {
+        System.out.println("XML 前置增强...");
+    }
+}
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!-- 切入的对象类 -->
+    <bean id="userDao" class="com.ykjver.learnspring.springaopdemo.lesson3.UserDaoImpl" />
+    <!-- 定义装增强方法的类，切面 -->
+    <bean id="myAspectXML" class="com.ykjver.learnspring.springaopdemo.lesson3.MyAspectXML" />
+
+    <!-- aop 配置 -->
+    <aop:config>
+        <!-- 切点配置 -->
+        <aop:pointcut id="addUserCut" expression="execution(* com.ykjver.learnspring.springaopdemo.lesson3.UserDaoImpl.*(..))"></aop:pointcut>
+
+        <!-- 切面配置，就是说在这个切面上，有哪些切点，如 在 log 日志记录这个切面上，前置增强的目标类为 addUserCut 定义的切点所包含的类 -->
+        <aop:aspect ref="myAspectXML">
+
+            <!-- before 类型的增强，使用的是 myAspectXML 切面中的 before 方法，有 addUserCut 中定义的切点被挂在了这个切面上。 -->
+            <aop:before method="before" pointcut-ref="addUserCut"></aop:before>
+        </aop:aspect>
+    </aop:config>
+</beans>
+```
+
+2018-02-24
 Updating...
