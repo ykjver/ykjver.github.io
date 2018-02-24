@@ -643,5 +643,117 @@ public class MyAspectXML {
 </beans>
 ```
 
+#### Thread Local 使用
+`java.lang.ThreadLocal` 变量，对于每隔线程都是有一个副本的。
+
+在 Thread 类中右一个这样的成员变量，非静态，所以每一个 Thread 实例都有一份 threadLocals 的成员变量，这样就保证每个线程独一份，而 ThreadLocalMap 是类似于Map一样的东西，每个 ThreadLocal 都有自己的一个 Hash 值，把这个 Hash 值和要存储的的值作为键值对，每次调用 `ThreadLocal#get()` 方法就用 ThreadLocal 实例的 Hash 做为键取值。
+```java
+/* ThreadLocal values pertaining to this thread. This map is maintained
+    * by the ThreadLocal class. */
+ThreadLocal.ThreadLocalMap threadLocals = null;
+```
+
+
+
+简单的使用如下
+
+```java
+public class ThreadLocalDemo {
+
+    //线程本地变量，重置了 initialValue 方法，方便加一的操作
+    public static ThreadLocal<Integer> seqNum = new ThreadLocal<Integer>() {
+        @Override
+        protected Integer initialValue() {
+            return 0;
+        }
+    };
+
+    //每次给 threadLocal 加一
+    public static int getNextNum() {
+        seqNum.set(seqNum.get() + 1);
+        return seqNum.get();
+    }
+
+    public static void main(String[] args) {
+        new ClientTest().start();
+        new ClientTest().start();
+        new ClientTest().start();
+    }
+
+    //内部线程类，用作执行每隔线程对 threadLocal 静态变量的取值
+    public static class ClientTest extends Thread {
+        @Override
+        public void run() {
+            for (int i = 0; i < 3; i++) {
+                System.out.println(Thread.currentThread().getName() + " " +  ThreadLocalDemo.getNextNum());
+            }
+        }
+    }
+}
+```
+
+#### 泛型
+
+方法或者是类声明的时候，带尖括号的里面声明泛型类型表示符号，如果有多个，就用 `,` 隔开，每种类型都可以用来表明返回类型,泛型类型只能表明是应用类型，不能是原始类型
+
+方法使用泛型
+```java
+
+//方法中有两种泛型，其中 T 用来当做返回类型了
+public static <T, K> T out(T t, K k) {
+    System.out.println(t);
+    System.out.println(k);
+    return t;
+}
+```
+
+在方法上使用泛型
+
+```java
+public class List<T> {
+
+//用作声明变量
+    private T item;
+
+//用作返回类型
+    T get() {
+        return item;
+    }
+}
+```
+
+也可以使用 `extends` 关键字表明，泛型类型只能为哪些类的子类
+
+```java
+//泛型类型只能为 Comparable 的子类
+public static <T extends Comparable<T>> T max(T t1, T t2, T t3) {
+    T max = t1;
+    if (max.compareTo(t2) < 0) {
+        max = t2;
+    }
+    if (max.compareTo(t3) < 0) {
+        max = t3;
+    }
+    return max;
+}
+```
+
+同时也可以使用通配符 `?`
+
+```java
+
+//比较器类型必须是所比较数组 a 的父类比较器
+public static <T> void sort(T[] a, Comparator<? super T> c) {
+    if (c == null) {
+        sort(a);
+    } else {
+        if (LegacyMergeSort.userRequested)
+            legacyMergeSort(a, c);
+        else
+            TimSort.sort(a, 0, a.length, c, null, 0, 0);
+    }
+}
+```
+
 2018-02-24
 Updating...
