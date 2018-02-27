@@ -755,5 +755,245 @@ public static <T> void sort(T[] a, Comparator<? super T> c) {
 }
 ```
 
-2018-02-24
+
+### 网络编程
+
+得到本机的 IP 地址
+
+```java
+InetAddress addr = InetAddress.getByName(null);
+```
+
+`ServerSocket` 的作用是用来等待一个 socket 连接上来，并产生一个 socket，ServerSocket 并不对连接做什么事情。
+
+简单的 ServerSocket 和 Socket 的交互，这里是一对一的连接，即一个 ServerSocket 同时只能处理一个 Socket 连接
+
+```java
+// ServerSocket 用于监听连接请求
+public class SimpleServerSocketDemo {
+
+    public static final int PORT = 9999;
+
+    public static void main(String[] args) {
+
+        ServerSocket serverSocket = null;
+        try {
+            serverSocket = new ServerSocket(PORT);
+            System.out.println("started: " + serverSocket);
+            //这里接受到 socket 请求就可以送给一个线程管理，那样就能同时处理多个请求
+            Socket socket = serverSocket.accept();
+
+            try {
+                BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                PrintWriter pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+
+                while (true) {
+                    String line = br.readLine();
+                    if ("END".equals(line)) break;
+                    System.out.println("echo:" + line);
+                    pw.println("echo:" + line);
+                }
+            } finally {
+                socket.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (serverSocket != null) {
+                try {
+                    serverSocket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}
+```
+
+socket 用于连接
+
+```java
+public class SimpleSocketClientDemo {
+
+    public static void main(String[] args) throws IOException {
+        InetAddress inetAddress = InetAddress.getByName(null);
+        System.out.println("address:" + inetAddress);
+        Socket socket = new Socket(inetAddress, SimpleServerSocketDemo.PORT);
+        System.out.println(socket);
+        try {
+            BufferedReader in =  new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+
+            Scanner scanner = new Scanner(System.in);
+            while (scanner.hasNext()) {
+                String line = scanner.nextLine();
+                if ("END".equals(line)) break;
+                out.println(line);
+                System.out.println(in.readLine());
+            }
+            out.println("END");
+        } finally {
+            socket.close();
+        }
+    }
+}
+
+```
+
+
+### 一个请求发送到 Spring Mvc 到请求返回请求的整个过程
+
+
+TomCat 容器调用 Filter `ApplicationFilterChain.internalDoFilter(request, response)` 
+-> `org.springframework.web.filter.OncePerRequestFilter`;
+
+```java
+// OncePerRequestFilter 只支持 httpServlet
+// 将 强转成 HttpServletRequest
+HttpServletRequest httpRequest = (HttpServletRequest)request;
+HttpServletResponse httpResponse = (HttpServletResponse)response;
+
+//只经过一次，设置标记
+String alreadyFilteredAttributeName = this.getAlreadyFilteredAttributeName();
+boolean hasAlreadyFilteredAttribute = request.getAttribute(alreadyFilteredAttributeName) != null;
+if (!hasAlreadyFilteredAttribute && !this.skipDispatch(httpRequest) && !this.shouldNotFilter(httpRequest)) {
+request.setAttribute(alreadyFilteredAttributeName, Boolean.TRUE);
+
+try {
+    this.doFilterInternal(httpRequest, httpResponse, filterChain);
+} finally {
+    request.removeAttribute(alreadyFilteredAttributeName);
+}
+} else {
+filterChain.doFilter(request, response);
+}
+```
+
+-> `org.springframework.web.filter.CharacterEncodingFilter`
+
+```java
+
+//得到编码格式，springboot 默认 utf-8
+String encoding = this.getEncoding();
+if (encoding != null) {
+    if (this.isForceRequestEncoding() || request.getCharacterEncoding() == null) {
+        request.setCharacterEncoding(encoding);
+    }
+
+// 如果要设置了强转就要强制转换成 utf-8
+    if (this.isForceResponseEncoding()) {
+        response.setCharacterEncoding(encoding);
+    }
+}
+
+filterChain.doFilter(request, response);
+```
+
+-> `org.springframework.web.filter.HiddenHttpMethodFilter`
+
+-> `org.springframework.web.filter.HttpPutFormContentFilter`
+```java
+
+// 处理 PUT 和 PATCH 
+
+/**
+PUT：client对一个URI发送一个Entity，服务器在这个URI下如果已经又了一个Entity，那么此刻服务器应该替换成client重新提交的，也由此保证了PUT的幂等性。如果服务器之前没有Entity ，那么服务器就应该将client提交的放在这个URI上。总结一个字：PUT.
+
+OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+
+PATCH 用于资源的部分内容的更新，例如更新某一个字段。具体比如说只更新用户信息的电话号码字段
+
+https://unmi.cc/restful-http-patch-method/
+*/
+if (("PUT".equals(request.getMethod()) || "PATCH".equals(request.getMethod())) && this.isFormContentType(request)) {
+    HttpInputMessage inputMessage = new ServletServerHttpRequest(request) {
+        public InputStream getBody() throws IOException {
+            return request.getInputStream();
+        }
+    };
+    MultiValueMap<String, String> formParameters = this.formConverter.read((Class)null, inputMessage);
+    if (!formParameters.isEmpty()) {
+        HttpServletRequest wrapper = new HttpPutFormContentFilter.HttpPutFormContentRequestWrapper(request, formParameters);
+        filterChain.doFilter(wrapper, response);
+        return;
+    }
+}
+
+filterChain.doFilter(request, response);
+
+```
+
+-> `org.springframework.web.filter.RequestContextFilter`
+-> `org.apache.tomcat.websocket.server.WsFilter`
+
+-> `javax.servlet.http` -> super `org.springframework.web.servlet.FrameworkServlet`
+-> `javax.servlet.http.HttpServlet#service(HttpServletRequest req, HttpServletResponse resp)`
+-> `javax.servlet.http.HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)`
+-> `org.springframework.web.servlet.FrameworkServlet.processRequest(HttpServletRequest request, HttpServletResponse response)`
+-> `org.springframework.web.servlet.DispatcherServlet.doService(HttpServletRequest request, HttpServletResponse response)`
+-> `org.springframework.web.servlet.DispatcherServlet.doDispatch(HttpServletRequest request, HttpServletResponse response)`
+
+
+
+通过 `org.springframework.web.servlet.mvc.method.RequestMappingInfo` 来记录 请求 与 Handler 的匹配条件
+
+`org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.MappingRegistry` 用来保存注册的信息，其中使用 Map 键值对保存
+
+
+
+
+### java时间 处理
+
+使用 `java.text.SimpleDateFormat` 格式化时间
+
+```java
+SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+String formatDateStr = sdf.format(date);
+```
+
+将字符串转化为 `Date` ，有 `ParseException` 异常抛出
+```java
+Date parseDate = sdf.parse("2018-02-27 22:11:40");
+```
+
+java 8 新增的时间处理类的一些使用列子
+
+```java
+LocalDate date = LocalDate.now();
+LocalTime time = LocalTime.now();
+LocalDateTime dateTime = LocalDateTime.now();
+
+System.out.println("两小时后是： " + time.plusHours(2));
+
+System.out.println("一周后的时间是： "+  date.plus(1, ChronoUnit.WEEKS));
+
+LocalDate birthday = LocalDate.of(1994, 02, 18);
+System.out.println("你的生日是: " + birthday);
+LocalDate herBirthday = LocalDate.of(1993, 12, 05);
+System.out.println(birthday.equals(herBirthday));
+
+//判断日期是在前面还是在后面
+System.out.println(birthday.isBefore(herBirthday));
+
+//处理不同时区的时间
+
+//当前时间戳
+System.out.println(Instant.now());
+
+//日期解析
+String holidayStr = "1994/02/18";
+DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+LocalDate holiday = LocalDate.parse(holidayStr, dateTimeFormatter);
+System.out.println(holiday);
+
+//日期格式化
+System.out.println("我的生日是：" + birthday.format(dateTimeFormatter));
+```
+
+#### 参考
+- http://blog.csdn.net/weixin_37577039/article/details/79229992
+- 
+
+2018-02-27
 Updating...
