@@ -993,7 +993,166 @@ System.out.println("我的生日是：" + birthday.format(dateTimeFormatter));
 
 #### 参考
 - http://blog.csdn.net/weixin_37577039/article/details/79229992
-- 
+- http://blog.csdn.net/jiangxishidayuan/article/details/52049581
+
+
+### HashMap 工作原理
+
+push 操作 
+```java
+// 通过 hash() 方法 把 key 做 hash 当做 底层存储数组，或者链表的 index，利用 链表解决 hash 冲突
+// 在 java 8 中 相同元素不再是按照链表存储在同一个桶中，以 红黑树的形式存在。
+public V put(K key, V value) {
+    return putVal(hash(key), key, value, false, true);
+}
+
+// hashmap 的初始值是 16
+static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16
+
+//通过这个算法能
+static final int hash(Object key) {
+    int h;
+    return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+}
+```
+
+
+// putVal 方法
+```java
+final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+                boolean evict) {
+    Node<K,V>[] tab; Node<K,V> p; int n, i;
+    if ((tab = table) == null || (n = tab.length) == 0)
+        n = (tab = resize()).length;
+
+        // 元素不存在就新建元素，存在就1， 放入到链表，2，放入到红黑树
+    if ((p = tab[i = (n - 1) & hash]) == null)
+        tab[i] = newNode(hash, key, value, null);
+    else {
+        Node<K,V> e; K k;
+        if (p.hash == hash &&
+            ((k = p.key) == key || (key != null && key.equals(k))))
+            //hash 相同，直接替换
+            e = p;
+        else if (p instanceof TreeNode)
+        // hash 不相同放入红黑树中
+            e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
+        else {
+            for (int binCount = 0; ; ++binCount) {
+                //循环找到链表尾巴
+                if ((e = p.next) == null) {
+                    p.next = newNode(hash, key, value, null);
+                    //如果链表长度超过 8 就变形为 红黑树
+                    if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
+                        treeifyBin(tab, hash);
+                    break;
+                }
+                if (e.hash == hash &&
+                    ((k = e.key) == key || (key != null && key.equals(k))))
+                    break;
+                p = e;
+            }
+        }
+        if (e != null) { // existing mapping for key
+            V oldValue = e.value;
+            if (!onlyIfAbsent || oldValue == null)
+                e.value = value;
+            afterNodeAccess(e);
+            return oldValue;
+        }
+    }
+    ++modCount;
+
+    //threshold=newThr:(int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
+        //默认0.75*16，大于threshold值就扩容
+    if (++size > threshold)
+        resize();
+    afterNodeInsertion(evict);
+    return null;
+}
+```
+
+
+#### java 中单例模式的实现
+```java
+
+/**
+ * 使用同步锁实现单例模式，线程安全
+ */
+public class Singleton {
+
+    private static Singleton instance;
+
+    public int count = 1;
+
+    private Singleton() {
+    }
+
+    public static synchronized Singleton getInstance() {
+
+        //这里可以使用双重校验来提高效率，只有第一次初始化会使用到同步锁
+        if (instance == null) {
+            instance = new Singleton();
+        }
+        return instance;
+    }
+
+}
+
+/**
+ * 静态属性实现
+ */
+class Singleton1 {
+    private static final Singleton1 instance = new Singleton1();
+
+    private Singleton1() {
+    }
+
+    public static Singleton1 getInstance() {
+        return instance;
+    }
+}
+
+
+/**
+ * 静态内部类实现
+ * 单例类初始化的时候可以做一些初始化动作
+ */
+class Singleton2 {
+    private static class SingletonHandle {
+        private static final Singleton2 INSTANCE = new Singleton2();
+    }
+
+    public Singleton2() {
+        System.out.println("延迟加载");
+    }
+
+    public static Singleton2 getInstance() {
+        return SingletonHandle.INSTANCE;
+    }
+}
+
+/**
+ * 枚举实现
+ */
+enum Singleton3 {
+    INSTANCE;
+
+    private int code = 0;
+
+    public void otherMethod() {
+        System.out.println("关于单例类的方法");
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+}
+```
 
 2018-02-27
 Updating...
