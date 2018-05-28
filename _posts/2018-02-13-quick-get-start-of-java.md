@@ -1017,7 +1017,7 @@ static final int hash(Object key) {
 ```
 
 
-// putVal 方法
+putVal 方法，可以看到，这里的方法是没有 同步 过程的，所以整个 HashMap 操作都是线程不安全的。如果每个方法都加关键字 synchronized 就编程 HashTable，如果采用 分段锁(1.7) CAS算法(1.8) 就是 ConcurrentHashMap，如果是 add emtpy bin 的情况，就不会锁
 ```java
 final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
                 boolean evict) {
@@ -1153,6 +1153,195 @@ enum Singleton3 {
     }
 }
 ```
+
+
+### 面试
+
+https://hacpai.com/article/1504434966657
+
+#### 1. String 类为什么是 final 的。
+
+String 是在开发中经常用到的， 所以需要效率，如果是 final 关键字就会直接定位到内存位置 ，还有就是 安全考虑
+
+#### 2. HashMap 的源码，实现原理，底层结构。
+
+HashMap 是基于 Hash 表的 Map 接口的非同步实现，HashTable 线程安全，但是不保证映射顺序，底层是一个数组 `transient Node<K,V>[] table;` 同时每隔数组的单元又是一个链表的头结点，当发生 Hash 冲突的时候，就会将元素存储在 链表的后继节上。在 JDK1.8 后，链表的长度超过 8 以后，就会转化成 红黑树进项保存 Hash 冲突的元素。Hash 的初始大小是 16， 如果超过 loadFacotr * table.length() 就会扩容，每次扩容的都是 2 的 n 次方倍，通过 key.hashCode 来计算放入 Node 数组的 index 值。
+
+#### 3. 说说你知道的几个 Java 集合类：list、set、queue、map 实现类咯。。。
+- public interface Collection<E> extends Iterable<E> 
+    - List
+        - `java.util.ArrayList` 底层实现 `transient Object[] elementData; // non-private to simplify nested class access` 一个 Object 数组，不过可以自动扩容。
+        - `java.util.Vector`，线程安全，而 ArrayList 线程不安全, 当使用一个 Vector 的 Iterator 的时候，如果有线程正在修改 Vecotor 将跑出 `ConcurrentModificationException`，所以要捕获异常
+        - `java.util.LinkedList` 线程不安全，底层是一个链表，ArrayList 读取最快，LinkedList 插入和删除最快
+    - Set
+        - `java.util.HashSet` 底层实现是把值存在 HashMap 的 key 上而所有的 Node 的 value 都是同一个对象 Object 线程不安全。
+        - `java.util.LinkedHashSet` 按照插入顺序排列，底层就是用 LinkedHashMap 实现
+        - `java.util.TreeSet` private transient NavigableMap<E,Object> m; 实现
+    - Queue
+        - `java.util.LinkedList`
+        - LinkedBlockingQueue 同步
+- Map
+    - `java.util.HashMap`
+    - weakhashMap
+    - TreeMap
+    - HashTable
+
+#### 4. 描述一下 ArrayList 和 LinkedList 各自实现和区别
+
+一个是 数组 一个是 Link 链表
+
+#### 5. Java 中的队列都有哪些，有什么区别。
+ConcurrentLinkedQueue， LinkedBlockingQueue， ArrayBlockingQueue， LinkedList
+
+
+#### 6. 反射中，Class.forName 和 classloader 的区别
+
+Class.forName 会初始化类 classloader 不会
+
+```java
+public class Hello {
+    static{
+        System.out.println("hello static block");
+    }
+
+    public Hello () {
+        System.out.println("hello construct");
+    }
+}
+
+
+public class Test {
+    public static void main(String[] args) {
+//        try {
+    // 输出 hello static block
+//            Class Hello = Class.forName("com.ykjver.demo.controller.Hello");
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+
+
+        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+        try {
+            //不输出 hello static block
+            classLoader.loadClass("com.ykjver.demo.controller.Hello");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+
+#### 7. Java7、Java8 的新特性 (baidu 问的, 好 BT)
+
+#### 8. Java 数组和链表两种结构的操作效率，在哪些情况下 (从开头开始，从结尾开始，从中间开始)，哪些操作(插入，查找，删除) 的效率高
+
+#### 9. Java 内存泄露的问题调查定位：jmap，jstack 的使用等等
+
+#### 10. string、stringbuilder、stringbuffer 区别
+
+String 不可变，StringBuilder 线程不安全，StringBuffer 线程安全
+
+#### 11. hashtable 和 hashmap 的区别
+
+HashTable 线程安全，HashMap 线程不安全
+
+#### 13 . 异常的结构，运行时异常和非运行时异常，各举个例子
+
+#### 14. String a= “abc” String b = “abc” String c = new String(“abc”) String d = “ab” + “c” . 他们之间用 == 比较的结果
+
+#### 15. String 类的常用方法
+
+indexOf, substring, charAt, length, valueOf, equals, equalsIgnoreCase, startsWith, endsWith, getBytes, getChars, split, toLowerCase, toUpperCase, replaceAll, replace, replaceFirst, trim, indexOf, lastIndexOf,isEmpty, join
+
+#### 17. 抽象类和接口的区别
+接口不能含有 静态代码块，不能有属性，只能有抽象方法。
+#### 18. java 的基础类型和字节大小。
+
+
+1. 基本类型：4类8种
+2. 引用类型：类，接口，数组。
+
+| 类型     | 占用   |
+| -------- | ------ |
+| byte     | 1字节  |
+| short    | 2字节  |
+| int      | 4 字节 |
+| long     | 8 字节 |
+| float    | 4 字节 |
+| double   | 8 字节 |
+| char     | 2 字节 |
+| boolean | 1 字节 |
+
+### 二、Java IO
+
+#### 1. 讲讲 IO 里面的常见类，字节流、字符流、接口、实现类、方法阻塞。
+
+面向字节，面向字符，
+- OutputStream 
+    - FileOutputStream
+        - SocketInputSteam
+    - ByteArrayOtputStream
+    - FilterInputStream
+        - BufferedInputStream
+        - DataInputStream
+        - ZipInputStream
+    - ObjectInputStream
+    - PipInputStream
+- Writer
+    - InputStreamWriter
+    - BufferWriter
+    - StringWriter
+    - PipeWriter
+    - PrintWriter
+    - CharWriter
+
+InputSreamReader 通过集成 Reader 组合 StreamDecoder 来讲字节流转化为字符流
+
+#### 2. 讲讲 NIO。
+
+noblocking IO,如果用一个线程对应一个连接，也可以使用非阻塞的 IO，基于事件，如果几百万的 HTTP 连接，只有少数在传输数据，那么久设计服务优先级，和资源竞争的问题。
+
+#### 3.String编码UTF-8和GBK的区别
+
+
+
+五、开源框架
+
+1. hibernate 和 ibatis 的区别
+
+2. 讲讲 mybatis 的连接池。
+
+3. spring 框架中需要引用哪些 jar 包，以及这些 jar 包的用途
+
+4. springMVC 的原理
+
+5. springMVC 注解的意思
+
+6. spring 中 beanFactory 和 ApplicationContext 的联系和区别
+
+7. spring 注入的几种方式（循环注入）
+
+8. spring 如何实现事物管理的
+
+9. springIOC
+
+10. spring AOP 的原理
+
+11. hibernate 中的 1 级和 2 级缓存的使用方式以及区别原理（Lazy-Load 的理解）
+
+12. Hibernate 的原理体系架构，五大核心接口，Hibernate 对象的三种状态转换，事务管理。
+
+#### 2.什么是快速失败的故障安全迭代器?
+
+快速失败的Java迭代器可能会引发ConcurrentModifcationException在底层集合迭代过程中被修改。故障安全作为发生在实例中的一个副本迭代是不会抛出任何异常的。快速失败的故障安全范例定义了当遭遇故障时系统是如何反应的。例如，用于失败的快速迭代器ArrayList和用于故障安全的迭代器ConcurrentHashMap。
+
+#### 　3.Java BlockingQueue是什么?
+
+Java BlockingQueue是一个并发集合util包的一部分。BlockingQueue队列是一种支持操作，它等待元素变得可用时来检索，同样等待空间可用时来存储元素。使用 ReentrantLock 实现了同步
+
+#### 参考
+- http://www.cnblogs.com/mxw00927/p/7171598.html
 
 2018-02-27
 Updating...
