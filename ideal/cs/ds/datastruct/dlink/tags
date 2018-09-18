@@ -1,0 +1,39 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+LinkedList	dlink.c	/^typedef struct LinkedList {$/;"	s	file:
+LinkedList	dlink.c	/^} LinkedList;$/;"	t	typeref:struct:LinkedList	file:
+Node	dlink.c	/^typedef struct Node {$/;"	s	file:
+Node	dlink.c	/^} Node;$/;"	t	typeref:struct:Node	file:
+Node	link.c	/^struct Node {$/;"	s	file:
+Student	test.c	/^struct Student {$/;"	s	file:
+age	test.c	/^    int age;$/;"	m	struct:Student	file:
+changeName	test.c	/^void changeName(struct Student stu) {$/;"	f
+create	dlink.c	/^LinkedList* create(int n) {$/;"	f
+current	dlink.c	/^struct Node* current = NULL;$/;"	v	typeref:struct:Node
+data	dlink.c	/^    int data;$/;"	m	struct:LinkedList	file:
+data	dlink.c	/^    int data;$/;"	m	struct:Node	file:
+data	link.c	/^    int data;$/;"	m	struct:Node	file:
+deleteNode	link.c	/^struct Node* deleteNode(struct Node *head, int x) {$/;"	f
+deleteNodeAtPosition	link.c	/^struct Node* deleteNodeAtPosition(struct Node **headRef, int x) {$/;"	f
+deleteNodePosition	link.c	/^struct Node* deleteNodePosition(struct Node* head, int position) {$/;"	f
+head	dlink.c	/^struct Node* head = NULL;$/;"	v	typeref:struct:Node
+insertAfter	link.c	/^void insertAfter(struct Node *prevNode,  int newData) {$/;"	f
+insertAtBegining	link.c	/^void insertAtBegining(struct Node **headRef, int newData) {$/;"	f
+insertAtEnd	link.c	/^void insertAtEnd(struct Node **headRef, int newData) {$/;"	f
+isEmpty	dlink.c	/^int isEmpty() {$/;"	f
+main	dlink.c	/^int main() {$/;"	f
+main	link.c	/^int main() {$/;"	f
+main	test.c	/^int main() {$/;"	f
+name	test.c	/^    char *name;$/;"	m	struct:Student	file:
+next	dlink.c	/^    struct LinkedList* next;$/;"	m	struct:LinkedList	typeref:struct:LinkedList::LinkedList	file:
+next	dlink.c	/^    struct Node* next;$/;"	m	struct:Node	typeref:struct:Node::Node	file:
+next	link.c	/^    struct Node *next;$/;"	m	struct:Node	typeref:struct:Node::Node	file:
+prev	dlink.c	/^    struct Node* prev;$/;"	m	struct:Node	typeref:struct:Node::Node	file:
+printLinkedList	dlink.c	/^void printLinkedList(LinkedList list) {$/;"	f
+printList	link.c	/^void printList(struct Node *head) {$/;"	f
+printName	test.c	/^void printName(struct Student stu) {$/;"	f
+pushNode	link.c	/^void pushNode(struct Node **headRef, int newData) {$/;"	f
