@@ -1,0 +1,24 @@
+---
+layout: post
+title:  "Java 循环小优化"
+date:   2018-10-13 00:00:00
+categories:  java
+author : ykjver
+---
+
+
+遇到一个 Java 循环小优化，最开始我是这样写都一个循环
+
+```java
+    //nums is a java array
+    for (int i = 0; i < nums.length; i++) {
+    }
+```
+
+结果比下面的写法大约慢了 20%，这里每个循环就节约了一个取数组长度的操作，字节码操作是 `arraylength` 操作
+
+
+```java
+    for (int i = 0, len = nums.length; i < len; i++) {
+    }
+```
